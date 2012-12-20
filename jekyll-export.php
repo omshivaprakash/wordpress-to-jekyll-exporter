@@ -169,6 +169,16 @@ class Jekyll_Export {
 
 			$meta = array_merge( $this->convert_meta( $post ), $this->convert_terms( $postID ) );
 
+			if ( 'quote' == $meta['format'] ) {
+				if ( preg_match( '|<p class="author">(.*)</p>|', $post->post_content , $matches ) ) {
+					$meta['source'] = $matches[1];
+
+					$replacements = array( $matches[0], '<q>', '</q>' );
+
+					$post->post_content = str_replace( $replacements, '', $post->post_content );
+				}
+			}
+
 			// remove falsy values, which just add clutter
 			foreach ( $meta as $key => $value ) {
 				if ( !is_numeric( $value ) && !$value )
